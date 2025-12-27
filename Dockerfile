@@ -3,17 +3,22 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files and config files needed for build
 COPY package*.json ./
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
 
-# Install dependencies
+# Install all dependencies (including devDependencies for build)
 RUN npm ci
 
 # Copy source code
-COPY . .
+COPY src ./src
 
 # Build the application
 RUN npm run build
+
+# Verify build output exists
+RUN ls -la dist/
 
 # Stage 2: Production
 FROM node:22-alpine AS production
@@ -27,7 +32,7 @@ ENV NODE_ENV=production
 COPY package*.json ./
 
 # Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist

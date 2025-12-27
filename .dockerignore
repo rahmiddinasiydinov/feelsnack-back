@@ -1,10 +1,10 @@
 # Dependencies
 node_modules/
 
-# Build output
+# Local build output (we build fresh in Docker)
 dist/
 
-# Environment files
+# Environment files (passed via docker-compose)
 .env
 .env.local
 .env.*.local
@@ -24,6 +24,7 @@ npm-debug.log*
 
 # Testing
 coverage/
+test/
 
 # OS files
 .DS_Store
@@ -31,7 +32,11 @@ Thumbs.db
 
 # Documentation
 README.md
-*.md
 
-# Drizzle migrations (build separately if needed)
+# Docker files (not needed inside container)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Drizzle migrations
 drizzle/
