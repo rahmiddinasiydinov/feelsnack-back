@@ -1,0 +1,27 @@
+services:
+  feelsnack-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: feelsnack-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      # Connect to PostgreSQL on host machine
+      - DATABASE_HOST=host.docker.internal
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=feelsnack
+    extra_hosts:
+      # This allows the container to resolve 'host.docker.internal' to the host machine
+      - "host.docker.internal:host-gateway"
+    networks:
+      - feelsnack-network
+
+networks:
+  feelsnack-network:
+    driver: bridge
